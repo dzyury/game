@@ -1,5 +1,6 @@
 package org.example.quoridor
 
+import org.example.icon.Renderer
 import org.example.quoridor.model.BoardModel
 import org.example.quoridor.model.BoardType.BLACK_PAWN
 import org.example.quoridor.model.BoardType.WHITE_PAWN
@@ -37,10 +38,10 @@ class Field(private val model: BoardModel, private val x: Int, private val y: In
 
         val g2d = g as Graphics2D
         when (model.board[x][y]) {
-            WHITE_PAWN.ordinal -> PawnRenderer.showWhite(g2d, width, height, false)
-            BLACK_PAWN.ordinal -> PawnRenderer.showBlack(g2d, width, height, false)
-            HINT + WHITE_PAWN.ordinal -> PawnRenderer.showWhite(g2d, width, height, true)
-            HINT + BLACK_PAWN.ordinal -> PawnRenderer.showBlack(g2d, width, height, true)
+            WHITE_PAWN.ordinal -> Renderer.showWhite(g2d, width, height, false)
+            BLACK_PAWN.ordinal -> Renderer.showBlack(g2d, width, height, false)
+            HINT + WHITE_PAWN.ordinal -> Renderer.showWhite(g2d, width, height, true)
+            HINT + BLACK_PAWN.ordinal -> Renderer.showBlack(g2d, width, height, true)
         }
     }
 }

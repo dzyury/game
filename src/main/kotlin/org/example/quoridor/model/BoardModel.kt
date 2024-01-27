@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent
 import javax.swing.JComponent
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
-import kotlin.system.exitProcess
 
 
 class BoardModel(private val n: Int) {
@@ -216,9 +215,9 @@ class BoardModel(private val n: Int) {
                 options[0]
             )
 
-            if (answer != 0) exitProcess(1)
             start()
             view?.repaint()
+            if (answer != 0) SwingUtilities.getWindowAncestor(view!!)?.isVisible = false
         }
     }
 

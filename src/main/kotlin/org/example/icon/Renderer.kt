@@ -1,15 +1,15 @@
-package org.example.quoridor
+package org.example.icon
 
 import java.awt.AlphaComposite
 import java.awt.Graphics2D
 import java.awt.Image
 import javax.imageio.ImageIO
 
-object PawnRenderer {
+object Renderer {
     val white: Image by lazy { load("white.png") }
     val black: Image by lazy { load("black.png") }
 
-    private fun load(name: String): Image {
+    fun load(name: String): Image {
         val resource = this::class.java.classLoader.getResourceAsStream(name)
         return ImageIO.read(resource)
     }

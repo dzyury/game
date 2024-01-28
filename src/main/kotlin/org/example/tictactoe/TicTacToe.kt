@@ -188,7 +188,7 @@ data class Winner(val type: Type, val x1: Int = 0, val y1: Int = 0, val x2: Int 
     }
 }
 
-class Glass(val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
+class Glass(private val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
     override fun paintComponent(g: Graphics?) {
         val g2d = g as Graphics2D
         if (winner.type == Type.EMPTY) {
@@ -206,8 +206,7 @@ class Glass(val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
 
         val pic = if (winner.type == Type.X) "btext.png" else "wtext.png"
         val image = Renderer.load(pic) as BufferedImage
-//        val (point1, point2) =
-        if (winner.y1 == winner.y2) {
+        val (point1, point2) = if (winner.y1 == winner.y2) {
             val cell1 = cells[winner.x1][winner.y1]
             val start = Point(cell1.size.width / 2, (cell1.size.height * 0.2).toInt())
             val point1 = SwingUtilities.convertPoint(cell1, start, this)
@@ -215,15 +214,7 @@ class Glass(val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
             val cell2 = cells[winner.x2][winner.y2]
             val end = Point(cell2.size.width / 2, (cell2.size.height * 0.8).toInt())
             val point2 = SwingUtilities.convertPoint(cell2, end, this)
-
-            val texture = TexturePaint(
-                image,
-                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
-            )
-            g2d.paint = texture
-            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
-            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
-            return
+            point1 to point2
         } else if (winner.x1 == winner.x2) {
             val cell1 = cells[winner.x1][winner.y1]
             val start = Point((cell1.size.width * 0.2).toInt(), cell1.size.height / 2)
@@ -232,32 +223,16 @@ class Glass(val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
             val cell2 = cells[winner.x2][winner.y2]
             val end = Point((cell2.size.width * 0.8).toInt(), cell2.size.height / 2)
             val point2 = SwingUtilities.convertPoint(cell2, end, this)
-
-            val texture = TexturePaint(
-                image,
-                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
-            )
-            g2d.paint = texture
-            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
-            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
-            return
+            point1 to point2
         } else if (winner.x1 == 0) {
-            val cell1 = cells[winner.x1][winner.y1]
+            val cell1 = cells[0][winner.y1]
             val start = Point((cell1.size.width * 0.2).toInt(), (cell1.size.height * 0.2).toInt())
             val point1 = SwingUtilities.convertPoint(cell1, start, this)
 
             val cell2 = cells[winner.x2][winner.y2]
             val end = Point((cell2.size.width * 0.8).toInt(), (cell2.size.height * 0.8).toInt())
             val point2 = SwingUtilities.convertPoint(cell2, end, this)
-
-            val texture = TexturePaint(
-                image,
-                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
-            )
-            g2d.paint = texture
-            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
-            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
-            return
+            point1 to point2
         } else {
             val cell1 = cells[winner.x1][winner.y1]
             val start = Point((cell1.size.width * 0.2).toInt(), (cell1.size.height * 0.8).toInt())
@@ -266,27 +241,16 @@ class Glass(val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
             val cell2 = cells[winner.x2][winner.y2]
             val end = Point((cell2.size.width * 0.8).toInt(), (cell2.size.height * 0.2).toInt())
             val point2 = SwingUtilities.convertPoint(cell2, end, this)
-
-            val texture = TexturePaint(
-                image,
-                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
-            )
-            g2d.paint = texture
-            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
-            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
-            return
+            point1 to point2
         }
 
-        val width = size.width * 0.6
-        val y = size.height * 0.2
-        val height = size.height * 0.6
         val texture = TexturePaint(
             image,
             Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
         )
         g2d.paint = texture
         g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
-        g2d.drawLine((x + width).toInt(), y.toInt(), x.toInt(), (y + height).toInt())
+        g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
     }
 }
 

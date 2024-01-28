@@ -47,21 +47,17 @@ class TicTacToeModel {
             cell.repaint()
             isX = !isX
 
-            var winner = Type.EMPTY
-            if (isWinner(Type.X)) winner = Type.X
-            if (isWinner(Type.O)) winner = Type.O
-
+            val winner = getWinner()
             val isFine = board.all { row -> row.all { it != Type.EMPTY } }
-            if (isFine || winner != Type.EMPTY) {
+            if (isFine || winner.type != Type.EMPTY) {
                 val frame = SwingUtilities.getWindowAncestor(cell) as JFrame
-                (frame.glassPane as? Glass)?.let { glass ->
-                    glass.winner = winner
-                    glass.isVisible = true
-                    glass.repaint()
-                }
+                val glass = (frame.glassPane as? Glass) ?: return
+                glass.winner = winner
+                glass.isVisible = true
+                glass.repaint()
 
                 val options = arrayOf("Yes, please", "No, thanks")
-                val message = if (winner != Type.EMPTY) "$winner won" else "Draw"
+                val message = if (winner.type != Type.EMPTY) "${winner.type} won" else "Draw"
                 val answer = JOptionPane.showOptionDialog(
                     null,
                     "<html>$message<br>Would you like to play again?",
@@ -79,28 +75,39 @@ class TicTacToeModel {
         }
     }
 
-    private fun isWinner(type: Type): Boolean {
-        for (x in 0..<3) if (board[x].all { it == type }) return true
+    private fun getWinner(): Winner {
+        return getWinner(Type.X) ?: getWinner(Type.O) ?: Winner.EMPTY
+    }
 
+    private fun getWinner(type: Type): Winner? {
         val winners = BooleanArray(3) { true }
+        for (x in 0..<3) {
+            for (y in 0..<3) {
+                if (board[x][y] != type) winners[x] = false
+            }
+        }
+        winners.forEachIndexed { idx, winner -> if (winner) return Winner(type, idx, 0, idx, 2) }
+
+        winners.fill(true)
         for (x in 0..<3) {
             for (y in 0..<3) {
                 if (board[x][y] != type) winners[y] = false
             }
         }
-        if (winners.any { it }) return true
+        winners.forEachIndexed { idx, winner -> if (winner) return Winner(type, 0, idx, 2, idx) }
 
         var winner1 = true
         for (x in 0..<3) {
             if (board[x][x] != type) winner1 = false
         }
-        if (winner1) return true
+        if (winner1) return Winner(type, 0, 0, 2, 2)
 
         var winner2 = true
         for (x in 0..<3) {
             if (board[x][2 - x] != type) winner2 = false
         }
-        return winner2
+        if (winner2) return Winner(type, 2, 0, 0, 2)
+        return null
     }
 
     fun hint(x: Int, y: Int) {
@@ -175,63 +182,123 @@ class Cell(var model: TicTacToeModel, val xm: Int, val ym: Int) : JPanel() {
     }
 }
 
-class Glass(var winner: Type) : JComponent() {
+data class Winner(val type: Type, val x1: Int = 0, val y1: Int = 0, val x2: Int = 0, val y2: Int = 0) {
+    companion object {
+        val EMPTY = Winner(Type.EMPTY)
+    }
+}
+
+class Glass(val cells: Array<Array<Cell>>, var winner: Winner) : JComponent() {
     override fun paintComponent(g: Graphics?) {
         val g2d = g as Graphics2D
-        val x = size.width * 0.2
+        if (winner.type == Type.EMPTY) {
+            val message = "Draw"
+            g2d.color = Color.GREEN
+            val fontSize = size.width / 3f
+            g2d.font = g2d.font.deriveFont(Font.BOLD, fontSize)
+            g2d.drawString(
+                message,
+                (size.width - g2d.fontMetrics.stringWidth(message)) / 2f,
+                (size.height + fontSize / 2) / 2f
+            )
+            return
+        }
+
+        val pic = if (winner.type == Type.X) "btext.png" else "wtext.png"
+        val image = Renderer.load(pic) as BufferedImage
+//        val (point1, point2) =
+        if (winner.y1 == winner.y2) {
+            val cell1 = cells[winner.x1][winner.y1]
+            val start = Point(cell1.size.width / 2, (cell1.size.height * 0.2).toInt())
+            val point1 = SwingUtilities.convertPoint(cell1, start, this)
+
+            val cell2 = cells[winner.x2][winner.y2]
+            val end = Point(cell2.size.width / 2, (cell2.size.height * 0.8).toInt())
+            val point2 = SwingUtilities.convertPoint(cell2, end, this)
+
+            val texture = TexturePaint(
+                image,
+                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
+            )
+            g2d.paint = texture
+            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
+            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
+            return
+        } else if (winner.x1 == winner.x2) {
+            val cell1 = cells[winner.x1][winner.y1]
+            val start = Point((cell1.size.width * 0.2).toInt(), cell1.size.height / 2)
+            val point1 = SwingUtilities.convertPoint(cell1, start, this)
+
+            val cell2 = cells[winner.x2][winner.y2]
+            val end = Point((cell2.size.width * 0.8).toInt(), cell2.size.height / 2)
+            val point2 = SwingUtilities.convertPoint(cell2, end, this)
+
+            val texture = TexturePaint(
+                image,
+                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
+            )
+            g2d.paint = texture
+            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
+            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
+            return
+        } else if (winner.x1 == 0) {
+            val cell1 = cells[winner.x1][winner.y1]
+            val start = Point((cell1.size.width * 0.2).toInt(), (cell1.size.height * 0.2).toInt())
+            val point1 = SwingUtilities.convertPoint(cell1, start, this)
+
+            val cell2 = cells[winner.x2][winner.y2]
+            val end = Point((cell2.size.width * 0.8).toInt(), (cell2.size.height * 0.8).toInt())
+            val point2 = SwingUtilities.convertPoint(cell2, end, this)
+
+            val texture = TexturePaint(
+                image,
+                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
+            )
+            g2d.paint = texture
+            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
+            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
+            return
+        } else {
+            val cell1 = cells[winner.x1][winner.y1]
+            val start = Point((cell1.size.width * 0.2).toInt(), (cell1.size.height * 0.8).toInt())
+            val point1 = SwingUtilities.convertPoint(cell1, start, this)
+
+            val cell2 = cells[winner.x2][winner.y2]
+            val end = Point((cell2.size.width * 0.8).toInt(), (cell2.size.height * 0.2).toInt())
+            val point2 = SwingUtilities.convertPoint(cell2, end, this)
+
+            val texture = TexturePaint(
+                image,
+                Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
+            )
+            g2d.paint = texture
+            g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
+            g2d.drawLine(point1.x, point1.y, point2.x, point2.y)
+            return
+        }
+
         val width = size.width * 0.6
         val y = size.height * 0.2
         val height = size.height * 0.6
-        when (winner) {
-            Type.X -> {
-                val image = Renderer.load("btext.png") as BufferedImage
-                val texture = TexturePaint(
-                    image,
-                    Rectangle2D.Double(x, y, image.width.toDouble(), image.height.toDouble())
-                )
-                g2d.paint = texture
-
-//                g2d.color = X_COLOR
-                g2d.stroke = BasicStroke(minOf(size.width, size.height) * 0.1f)
-                g2d.drawLine(x.toInt(), y.toInt(), (x + width).toInt(), (y + height).toInt())
-            }
-
-            Type.O -> {
-                val image = Renderer.load("wtext.png") as BufferedImage
-                val texture = TexturePaint(
-                    image,
-                    Rectangle2D.Double(x, y, image.width.toDouble(), image.height.toDouble())
-                )
-                g2d.paint = texture
-
-//                g2d.color = O_COLOR
-                g2d.stroke = BasicStroke(minOf(size.width, size.height) * 0.1f)
-                g2d.drawLine((x + width).toInt(), y.toInt(), x.toInt(), (y + height).toInt())
-            }
-
-            else -> {
-                val message = "Draw"
-                g2d.color = Color.GREEN
-                val fontSize = size.width / 3f
-                g2d.font = g2d.font.deriveFont(Font.BOLD, fontSize)
-                g2d.drawString(
-                    message,
-                    (size.width - g2d.fontMetrics.stringWidth(message)) / 2f,
-                    (size.height + fontSize / 2) / 2f
-                )
-            }
-        }
+        val texture = TexturePaint(
+            image,
+            Rectangle2D.Float(0f, 0f, image.width.toFloat(), image.height.toFloat())
+        )
+        g2d.paint = texture
+        g2d.stroke = BasicStroke(minOf(size.width, size.height) / 30f)
+        g2d.drawLine((x + width).toInt(), y.toInt(), x.toInt(), (y + height).toInt())
     }
 }
 
 class Field : JPanel() {
     val model: TicTacToeModel
+    val cells: Array<Array<Cell>>
 
     init {
         layout = GridLayout(3, 3)
 
         model = TicTacToeModel()
-        val cells = Array(3) { x -> Array(3) { y -> Cell(model, x, y) } }
+        cells = Array(3) { x -> Array(3) { y -> Cell(model, x, y) } }
         cells.forEach { row -> row.forEach { add(it) } }
         model.cells = cells
     }
@@ -239,8 +306,9 @@ class Field : JPanel() {
 
 class TicTacToe : JFrame() {
     init {
-        contentPane = Field()
-        glassPane = Glass(org.example.tictactoe.Type.EMPTY)
+        val field = Field()
+        contentPane = field
+        glassPane = Glass(field.cells, Winner.EMPTY)
         size = Dimension(400, 400)
     }
 }

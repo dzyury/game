@@ -1,10 +1,10 @@
 package org.example
 
-import org.example.quoridor.Quoridor
+import org.example.ticTacToe.TicTacToe
 import javax.swing.SwingUtilities
 
-fun main() {
+fun main(args: Array<String>) {
     SwingUtilities.invokeLater {
-        Quoridor()
+        TicTacToe()
     }
 }

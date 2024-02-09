@@ -208,7 +208,7 @@ fun clicked(i: Int, panel: JPanel, field: Array<Array<Int>>, turn: Int, frame: J
                 for (i in 0..2) {
                     for (j in 0..2) {
                         field[i][j] = 0
-                        states[i * 3 + j] = 0
+                        states[i *3 + j] = 0
                     }
                 }
                 panel.parent.repaint()

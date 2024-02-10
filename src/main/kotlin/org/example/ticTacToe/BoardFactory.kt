@@ -1,6 +1,6 @@
-package org.example.tic_tac_toe
+package org.example.ticTacToe
 
-import org.example.tic_tac_toe.model.BoardModel
+import org.example.ticTacToe.model.BoardModel
 import java.awt.GridBagConstraints
 import java.awt.GridLayout
 import javax.swing.JComponent

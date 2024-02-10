@@ -1,4 +1,4 @@
-package org.example.tic_tac_toe
+package org.example.ticTacToe
 
 import java.awt.AlphaComposite
 import java.awt.Graphics2D

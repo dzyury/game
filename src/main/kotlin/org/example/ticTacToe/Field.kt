@@ -1,8 +1,8 @@
-package org.example.tic_tac_toe
+package org.example.ticTacToe
 
-import org.example.tic_tac_toe.model.BoardModel
-import org.example.tic_tac_toe.model.BoardType
-import org.example.tic_tac_toe.model.HINT
+import org.example.ticTacToe.model.BoardModel
+import org.example.ticTacToe.model.BoardType
+import org.example.ticTacToe.model.HINT
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D

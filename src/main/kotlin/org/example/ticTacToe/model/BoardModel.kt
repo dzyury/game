@@ -1,6 +1,6 @@
-package org.example.tic_tac_toe.model
+package org.example.ticTacToe.model
 
-import org.example.tic_tac_toe.model.BoardType.*
+import org.example.ticTacToe.model.BoardType.*
 import javax.swing.JComponent
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities

@@ -1,4 +1,4 @@
-package org.example.tic_tac_toe.model
+package org.example.ticTacToe.model
 
 const val HINT = 32
 

@@ -119,7 +119,7 @@ class TicTacToeModel {
         }
     }
 
-    fun unhint(x: Int, y: Int) {
+    fun unHint(x: Int, y: Int) {
         if (board[x][y] == Type.EMPTY) {
             val cell = cells[x][y]
             cell.type = Type.EMPTY
@@ -147,7 +147,7 @@ class Cell(var model: TicTacToeModel, val xm: Int, val ym: Int) : JPanel() {
             }
 
             override fun mouseExited(e: MouseEvent?) {
-                model.unhint(xm, ym)
+                model.unHint(xm, ym)
             }
         })
     }
@@ -204,7 +204,7 @@ class Glass(private val cells: Array<Array<Cell>>, var winner: Winner) : JCompon
             return
         }
 
-        val pic = if (winner.type == Type.X) "btext.png" else "wtext.png"
+        val pic = if (winner.type == Type.X) "bText.png" else "wText.png"
         val image = Renderer.load(pic) as BufferedImage
         val (point1, point2) = if (winner.y1 == winner.y2) {
             val cell1 = cells[winner.x1][winner.y1]

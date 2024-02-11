@@ -2,6 +2,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+src/main/kotlin/org/example/tmp
+src/main/kotlin/org/example/demo
 
 ### IntelliJ IDEA ###
 .idea/

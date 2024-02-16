@@ -1,4 +1,4 @@
-@file:Suppress("NAME_SHADOWING")
+@file:Suppress("NAME_SHADOWING", "DEPRECATION")
 
 package myGame
 
@@ -39,8 +39,10 @@ fun main() {
                         g2d.stroke = BasicStroke(10f)
                         g2d.color = Color(178, 16, 16)
 
-                        g2d.drawLine(45, 20, 375, 220)
-                        g2d.drawLine(375, 20, 45, 220)
+                        g2d.drawLine(super.size().width/10, super.size().height/10,
+                            super.size().width*9/10, super.size().height*9/10)
+                        g2d.drawLine(super.size().width*9/10, super.size().height/10,
+                            super.size().width/10, super.size().height*9/10)
 
                     }
 
@@ -49,7 +51,8 @@ fun main() {
                         g2d.stroke = BasicStroke(10f)
                         g2d.color = Color(23, 52, 141)
 
-                        g2d.drawOval(85, 30, 230, 200)
+                        g2d.drawOval(super.size().width/6, super.size().height/10,
+                            super.size().width*2/3, super.size().height*4/5)
                     }
 
                     -1 -> {
@@ -57,8 +60,10 @@ fun main() {
                         g2d.stroke = BasicStroke(10f)
                         g2d.color = Color(178, 16, 16, 50)
 
-                        g2d.drawLine(45, 20, 375, 220)
-                        g2d.drawLine(375, 20, 45, 220)
+                        g2d.drawLine(super.size().width/10, super.size().height/10,
+                            super.size().width*9/10, super.size().height*9/10)
+                        g2d.drawLine(super.size().width*9/10, super.size().height/10,
+                            super.size().width/10, super.size().height*9/10)
                     }
 
                     -2 -> {
@@ -66,7 +71,8 @@ fun main() {
                         g2d.stroke = BasicStroke(10f)
                         g2d.color = Color(23, 52, 141, 50)
 
-                        g2d.drawOval(85, 30, 230, 200)
+                        g2d.drawOval(super.size().width/6, super.size().height/10,
+                            super.size().width*2/3, super.size().height*4/5)
                     }
                 }
             }
@@ -117,7 +123,8 @@ fun clicked(i: Int, panel: JPanel, field: Array<Array<Int>>, turn: Int, frame: J
                     val button1 = JButton("EXIT")
                     val button2 = JButton("REPLAY")
                     val panelB = JPanel()
-                    val label = JLabel("                                      The crosses won. Choose the option")
+                    val label = JLabel("                " +
+                            "                              The crosses won. Choose the option")
                     dialog.add(panelB)
                     panelB.layout = GridLayout(3, 1)
                     panelB.add(label)
@@ -158,7 +165,8 @@ fun clicked(i: Int, panel: JPanel, field: Array<Array<Int>>, turn: Int, frame: J
                     val button1 = JButton("EXIT")
                     val button2 = JButton("REPLAY")
                     val panelB = JPanel()
-                    val label = JLabel("                                      The noughts won. Choose the option")
+                    val label = JLabel("                     " +
+                            "                         The noughts won. Choose the option")
                     dialog.add(panelB)
                     panelB.layout = GridLayout(3, 1)
                     panelB.add(label)
@@ -196,7 +204,8 @@ fun clicked(i: Int, panel: JPanel, field: Array<Array<Int>>, turn: Int, frame: J
             val button1 = JButton("EXIT")
             val button2 = JButton("REPLAY")
             val panelB = JPanel()
-            val label = JLabel("                                              Draw. Choose the option")
+            val label = JLabel("                                      " +
+                    "                Draw. Choose the option")
             dialog.add(panelB)
             panelB.layout = GridLayout(3, 1)
             panelB.add(label)
@@ -208,7 +217,7 @@ fun clicked(i: Int, panel: JPanel, field: Array<Array<Int>>, turn: Int, frame: J
                 for (i in 0..2) {
                     for (j in 0..2) {
                         field[i][j] = 0
-                        states[i *3 + j] = 0
+                        states[i * 3 + j] = 0
                     }
                 }
                 panel.parent.repaint()

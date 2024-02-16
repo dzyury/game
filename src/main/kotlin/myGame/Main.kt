@@ -255,3 +255,4 @@ fun exited(i: Int, panel: JPanel, field: Array<Array<Int>>, states: Array<Int>) 
         panel.repaint()
     }
 }
+

@@ -11,8 +11,8 @@ class HalfBarrier(private val model: BoardModel, vararg points: Point) : JCompon
         when {
             points[0].x < 0 -> points.forEach { it.x += 2 }
             points[0].y < 0 -> points.forEach { it.y += 2 }
-            points[2].x > model.board.size -> points.forEach { it.x -= 2 }
-            points[2].y > model.board.size -> points.forEach { it.y -= 2 }
+            points[2].x > model.data.size -> points.forEach { it.x -= 2 }
+            points[2].y > model.data.size -> points.forEach { it.y -= 2 }
         }
     }
 

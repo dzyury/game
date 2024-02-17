@@ -1,16 +1,13 @@
-package org.example.quoridor
+package org.example.tictactoe
 
-import org.example.quoridor.model.FenceModel
 import java.awt.*
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.Timer
 
-private const val FENCE_COUNT = 10
-private val FENCE_COLOR = Color(192, 192, 0)
-
-class PlayerPane(name: String, image: Image, val model: FenceModel = FenceModel(FENCE_COUNT)) : JPanel() {
-    private val icon: Icon
-    private val pawnLabel: JLabel
-    private val fenceLabel: JLabel
+class PlayerPane(name: String, image: Image) : JPanel() {
+    private val nameLabel: JLabel
     private val timeLabel: JLabel
     private val picLabel: JLabel
 
@@ -21,20 +18,16 @@ class PlayerPane(name: String, image: Image, val model: FenceModel = FenceModel(
     init {
         preferredSize = Dimension(80, 80)
         minimumSize = Dimension(80, 80)
-        icon = ImageIcon(image.getScaledInstance(40, 40, Image.SCALE_FAST))
-        pawnLabel = JLabel(name)
-        fenceLabel = JLabel("${model.count}").also {
-            it.font = it.font.deriveFont(Font.BOLD, 32f)
-            it.foreground = FENCE_COLOR
-        }
+        val icon = ImageIcon(image.getScaledInstance(40, 40, Image.SCALE_FAST))
+        nameLabel = JLabel(name)
         timeLabel = JLabel("0:00.0").also { it.font = Font(Font.MONOSPACED, Font.BOLD, 18) }
         picLabel = JLabel(icon).also { it.isVisible = false; }
 
         layout = GridBagLayout()
         val c = GridBagConstraints()
         c.ipady = 10
-        add(pawnLabel, c)
-        add(fenceLabel, c)
+        add(nameLabel, c)
+        add(timeLabel, c)
         add(timeLabel, c)
         add(picLabel, c)
 
@@ -53,10 +46,6 @@ class PlayerPane(name: String, image: Image, val model: FenceModel = FenceModel(
         super.add(comp, constraints)
     }
 
-    fun updateFenceLabel() {
-        fenceLabel.text = "${model.count}"
-    }
-
     private fun updateTimerLabel() {
         val millis = time % 10
         val second = time / 10 % 60
@@ -67,18 +56,13 @@ class PlayerPane(name: String, image: Image, val model: FenceModel = FenceModel(
     fun start() {
         row = 0
         time = 0
-        model.count = FENCE_COUNT
-        model.pane = this
         updateTimerLabel()
     }
 
     fun turn(on: Boolean) {
-        if (on) timer.start() else {
-            timer.stop()
-            fenceLabel
-        }
+        if (on) timer.start() else timer.stop()
         val style = if (on) Font.BOLD else Font.PLAIN
-        pawnLabel.font = pawnLabel.font.deriveFont(style, 16f)
+        nameLabel.font = nameLabel.font.deriveFont(style, 16f)
         picLabel.isVisible = on
     }
 }

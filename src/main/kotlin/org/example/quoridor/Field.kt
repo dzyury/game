@@ -37,7 +37,7 @@ class Field(private val model: BoardModel, private val x: Int, private val y: In
         super.paintComponent(g)
 
         val g2d = g as Graphics2D
-        when (model.board[x][y]) {
+        when (model.data[x][y]) {
             WHITE_PAWN.ordinal -> Renderer.showWhite(g2d, width, height, false)
             BLACK_PAWN.ordinal -> Renderer.showBlack(g2d, width, height, false)
             HINT + WHITE_PAWN.ordinal -> Renderer.showWhite(g2d, width, height, true)

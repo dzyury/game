@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
 
-fun main() {
+fun main() = SwingUtilities.invokeLater {
     val frame = JFrame("Игра")
     val panel = JPanel()
     addButton(panel, "quoridor.png", "Коридор", Quoridor())
@@ -34,6 +34,7 @@ fun addButton(panel: JPanel, path: String, game: String, frame: JFrame) {
     panel.add(pane)
     pane.addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent?) {
+//            if (frame is TicTacToe) frame.manager.start()
             frame.isVisible = true
         }
     })

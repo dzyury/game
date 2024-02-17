@@ -1,12 +1,12 @@
 package org.example.quoridor
 
+import org.example.common.GameFrame
 import org.example.icon.Renderer
 import java.awt.BorderLayout
 import java.awt.BorderLayout.EAST
 import java.awt.BorderLayout.WEST
-import javax.swing.JFrame
 
-class Quoridor : JFrame("Quoridor") {
+class Quoridor : GameFrame("Quoridor") {
     init {
         val cp = contentPane
         cp.layout = BorderLayout()

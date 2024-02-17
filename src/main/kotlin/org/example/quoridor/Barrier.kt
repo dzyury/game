@@ -19,7 +19,7 @@ open class Barrier(private val model: BoardModel, private val x: Int, private va
     }
 
     override fun paintComponent(g: Graphics?) {
-        background = when (model.board[x][y]) {
+        background = when (model.data[x][y]) {
             BoardType.WHITE_FENCE.ordinal -> WHITE_BARRIER
             BoardType.BLACK_FENCE.ordinal -> BLACK_BARRIER
             HINT + BoardType.WHITE_FENCE.ordinal -> WHITE_BARRIER

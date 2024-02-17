@@ -29,7 +29,7 @@ class BoardFactory(n: Int) {
 
     fun createBoard(whitePanel: PlayerPane, blackPanel: PlayerPane): JComponent {
         val board = Board(model)
-        model.view = board
+        model.board = board
         model.whitePanel = whitePanel
         model.blackPanel = blackPanel
         board.layout = GridBagLayout()

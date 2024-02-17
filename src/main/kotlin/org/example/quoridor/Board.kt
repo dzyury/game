@@ -19,16 +19,7 @@ class Board(val model: BoardModel) : JComponent() {
         register("left-down", VK_END, VK_1) { model.move(VK_END) }
         register("right-down", VK_PAGE_DOWN, VK_3) { model.move(VK_PAGE_DOWN) }
 
-//        addKeyListener(object : KeyAdapter() {
-//            override fun keyPressed(e: KeyEvent) {
-//                when (e.keyCode) {
-//                    KeyEvent.VK_U, KeyEvent.VK_UP -> model.move(KeyEvent.VK_UP)
-//                    KeyEvent.VK_L, KeyEvent.VK_LEFT -> model.move(KeyEvent.VK_LEFT)
-//                    KeyEvent.VK_D, KeyEvent.VK_DOWN -> model.move(KeyEvent.VK_DOWN)
-//                    KeyEvent.VK_R, KeyEvent.VK_RIGHT -> model.move(KeyEvent.VK_RIGHT)
-//                }
-//            }
-//        })
+
     }
 
     private fun register(name: String, vararg keys: Int, block: () -> Unit) {
